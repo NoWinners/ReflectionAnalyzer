@@ -1,5 +1,7 @@
 package org.tak.enums;
 
+import org.tak.Explorer;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

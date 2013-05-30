@@ -1,5 +1,6 @@
-package org.tak.runtime;
+package org.tak;
 
+import org.tak.runtime.Game;
 import org.tak.runtime.gui.ReflectorGUI;
 import org.tak.runtime.servers.OSS;
 

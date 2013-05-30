@@ -1,5 +1,6 @@
-package org.tak.enums;
+package org.tak;
 
+import org.tak.enums.EnumExplorer;
 import org.tak.util.JarClassLoader;
 
 import java.io.IOException;

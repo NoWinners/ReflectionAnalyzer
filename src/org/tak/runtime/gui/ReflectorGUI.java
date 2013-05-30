@@ -1,7 +1,7 @@
 package org.tak.runtime.gui;
 
 import org.tak.runtime.Game;
-import org.tak.runtime.RuntimeAnalyzer;
+import org.tak.RuntimeAnalyzer;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
