@@ -5,6 +5,7 @@ import org.tak.runtime.Multipliers;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,7 +63,8 @@ public class ReflectorGUI extends JFrame {
                         e.printStackTrace();
                         return false;
                     }
-                    tree = new JTree(treeNode);
+                    DefaultTreeModel treeModel = new DefaultTreeModel(treeNode);
+                    tree.setModel(treeModel);
                     tree.updateUI();
                     jScrollPane.updateUI();
                     try {
