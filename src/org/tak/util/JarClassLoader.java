@@ -36,4 +36,7 @@ public class JarClassLoader {
         Class klass = loadClass(name);
         return klass.isEnum() ? new EnumExplorer(klass) : null;
     }
+    public URLClassLoader getUrlClassLoader() {
+        return urlClassLoader;
+    }
 }

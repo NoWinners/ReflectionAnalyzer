@@ -1,6 +1,7 @@
 package org.tak.util;
 
 import org.objectweb.asm.tree.*;
+import org.tak.runtime.Multipliers;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +13,7 @@ import java.util.Map;
  */
 public class MultiplierFinder {
     private final List<FieldStore> fieldStores;
-    private final        HashMap<FieldStore, Integer> MULTIPLIERS = new HashMap<>();
-    private static final String[]                     REGEXES     = new String[]{
+    private static final String[] REGEXES = new String[]{
             "LDC GETFIELD IMUL",
             "LDC GETSTATIC IMUL",
             "GETFIELD LDC IMUL",
@@ -24,27 +24,27 @@ public class MultiplierFinder {
         this.fieldStores = fieldStores;
     }
 
-    public HashMap<FieldStore, Integer> getMultipliers(ClassNode[] classNodes) {
-        if (MULTIPLIERS.size()!= fieldStores.size()) {
-            final HashMap<FieldStore,HashMap<Integer,Integer>>  hashMap=new HashMap<>();
-            for (ClassNode classNode : classNodes) {
-                    getMultipliers(classNode, REGEXES, hashMap);
-            }
-            for (Map.Entry<FieldStore,HashMap<Integer,Integer>> entry : hashMap.entrySet()) {
-                int mult = -1;
-                int best = 0;
-                for (Map.Entry<Integer,Integer> integerEntry : entry.getValue().entrySet()) {
-                    if (integerEntry.getValue() > best) {
-                        mult = integerEntry.getKey();
-                        best = integerEntry.getValue();
-                    }
-                }
-                MULTIPLIERS.put(entry.getKey(),mult);
-            }
+    public Multipliers getMultipliers(ClassNode[] classNodes) {
+        final HashMap<FieldStore, Integer> multipliers = new HashMap<>();
+        final HashMap<FieldStore, HashMap<Integer, Integer>> hashMap = new HashMap<>();
+        for (ClassNode classNode : classNodes) {
+            getMultipliers(classNode, REGEXES, hashMap);
         }
-        return MULTIPLIERS;
+        for (Map.Entry<FieldStore, HashMap<Integer, Integer>> entry : hashMap.entrySet()) {
+            int mult = -1;
+            int best = 0;
+            for (Map.Entry<Integer, Integer> integerEntry : entry.getValue().entrySet()) {
+                if (integerEntry.getValue() > best) {
+                    mult = integerEntry.getKey();
+                    best = integerEntry.getValue();
+                }
+            }
+            multipliers.put(entry.getKey(), mult);
+        }
+        return new Multipliers(multipliers);
     }
-    private void getMultipliers(ClassNode classNode, final String[] regexes, HashMap<FieldStore,HashMap<Integer,Integer>> hashMap) {
+
+    private void getMultipliers(ClassNode classNode, final String[] regexes, HashMap<FieldStore, HashMap<Integer, Integer>> hashMap) {
         for (MethodNode methodNode : classNode.methods) {
             RIS insnFinder = new RIS(methodNode);
             for (String regex : regexes) {
@@ -58,23 +58,23 @@ public class MultiplierFinder {
                         } else if (abstractInsnNode instanceof FieldInsnNode) {
                             fieldInsnNode = (FieldInsnNode) abstractInsnNode;
                         }
-                        if (fieldInsnNode!=null && ldcInsnNode!=null) {
+                        if (fieldInsnNode != null && ldcInsnNode != null) {
                             if (fieldInsnNode.desc.equals("I")) {
-                                for (int i = fieldStores.size()-1; i >= 0; i--) {
+                                for (int i = fieldStores.size() - 1; i >= 0; i--) {
                                     FieldStore field = fieldStores.get(i);
                                     if (field.getName().endsWith(fieldInsnNode.name) && field.getOwner().equals(fieldInsnNode.owner) && ldcInsnNode.cst instanceof Integer) {
                                         Integer mult = (Integer) ldcInsnNode.cst;
                                         if (hashMap.containsKey(field)) {
-                                            HashMap<Integer,Integer> mults = hashMap.get(field);
+                                            HashMap<Integer, Integer> mults = hashMap.get(field);
                                             if (mults.containsKey(mult)) {
-                                                mults.put(mult,mults.remove(mult)+1);
+                                                mults.put(mult, mults.remove(mult) + 1);
                                             } else {
-                                                mults.put(mult,1);
+                                                mults.put(mult, 1);
                                             }
                                         } else {
-                                            HashMap<Integer,Integer> mults = new HashMap<>();
-                                            mults.put(mult,1);
-                                            hashMap.put(field,mults);
+                                            HashMap<Integer, Integer> mults = new HashMap<>();
+                                            mults.put(mult, 1);
+                                            hashMap.put(field, mults);
                                         }
                                         break;
                                     }

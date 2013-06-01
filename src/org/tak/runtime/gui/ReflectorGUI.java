@@ -1,7 +1,7 @@
 package org.tak.runtime.gui;
 
 import org.tak.runtime.Game;
-import org.tak.RuntimeAnalyzer;
+import org.tak.runtime.Multipliers;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -10,37 +10,53 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * User: Tommy
  * 5/28/13
  */
 public class ReflectorGUI extends JFrame {
-    private final Object client;
-    private final Game game;
-    private JTree tree;
+    private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
+    private final Object      client;
+    private final boolean     hasMultipliers;
+    private final Multipliers multipliers;
+    private       JTree       tree;
     private static final int MAX_DEPTH = 3;
 
-    public ReflectorGUI(Game game) {
-        this.client = game.getClient();
-        this.game = game;
+    public ReflectorGUI(final Game game) {
+        this(game.getClient(), game.getServer().getMainClassName(), game.getServer().hasMultipliers(), game.getMultipliers());
+
+    }
+
+    public ReflectorGUI(final Object object, final String name, final boolean hasMultipliers, final Multipliers multipliers) {
+        this.client = object;
+        this.hasMultipliers = hasMultipliers;
+        this.multipliers = multipliers;
         setTitle("Runtime Reflection Analyzer");
-        setSize(500,500);
-        DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode("client");
+        setSize(500, 500);
+        DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(name);
         try {
-            exploreObject(treeNode,getClient(),0);
+            exploreObject(treeNode, getClient(), 0);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
         tree = new JTree(treeNode);
-        JScrollPane jScrollPane = new JScrollPane(tree);
+        final JScrollPane jScrollPane = new JScrollPane(tree);
         add(jScrollPane);
-        RuntimeAnalyzer.EXECUTOR_SERVICE.submit(new Callable<Boolean>() {
+
+        EXECUTOR_SERVICE.submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                int i = 0;
-                while (i < 300) {
-                    DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode("Client");
+                while (!isVisible()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (Exception ignored) {}
+                }
+                while (isVisible()) {
+                    System.out.println("updating");
+                    DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(name);
                     try {
                         exploreObject(treeNode,getClient(),0);
                     } catch (IllegalAccessException e) {
@@ -49,16 +65,17 @@ public class ReflectorGUI extends JFrame {
                     }
                     tree = new JTree(treeNode);
                     tree.updateUI();
-                    i++;
+                    jScrollPane.updateUI();
                     try {
                         Thread.sleep(5000);
                     } catch (Exception ignored) {
-
                     }
+
                 }
                 return true;
             }
         });
+
     }
     public Object getClient() {
         return client;
@@ -67,12 +84,16 @@ public class ReflectorGUI extends JFrame {
         if (object == null)
             return;
         Class klass = object.getClass();
-        for (Field field : klass.getDeclaredFields()) {
+        for (Field field : klass.getFields()) {
             if (!field.isAccessible())
                 field.setAccessible(true);
             Object result = field.get(object);
-            if (result instanceof Integer) {
-                result = (Integer)result*game.getMultiplier(klass.getName(),field.getName());
+            if (result instanceof String) {
+                System.out.println(result);
+            }
+            if (result instanceof Integer && hasMultipliers) {
+
+                result = (Integer)result*multipliers.getMultiplier(klass.getName(), field.getName());
             }
             if (result == null) {
                 result = "null";

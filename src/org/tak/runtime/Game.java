@@ -9,21 +9,17 @@ import org.tak.util.JarUtils;
 import org.tak.util.MultiplierFinder;
 
 import java.applet.Applet;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: Tommy
  * 5/28/13
  */
 public class Game {
-    private final Server                       server;
-    private       HashMap<FieldStore, Integer> multipliers;
-    private       Applet                       client;
+    private final Server server;
+    private Multipliers multipliers;
+    private Applet client;
 
     public Game(Server server) {
         this.server = server;
@@ -57,24 +53,16 @@ public class Game {
             e.printStackTrace();
         }
     }
-    public void dumpMultipliers(OutputStream outputStream) {
-        dumpMultipliers(new PrintStream(outputStream));
-    }
-    public void dumpMultipliers(PrintStream printStream) {
-        for (FieldStore fieldStore : multipliers.keySet()) {
-            printStream.println(fieldStore.toString()+":"+multipliers.get(fieldStore));
-        }
-    }
-    public int getMultiplier(String owner, String name) {
-        for (Map.Entry<FieldStore,Integer> entry : multipliers.entrySet()) {
-            if (entry.getKey().getName().equals(name) && entry.getKey().getOwner().equals(owner)) {
-                return entry.getValue();
-            }
-        }
-        return -1;
-    }
 
     public Applet getClient() {
         return client;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public Multipliers getMultipliers() {
+        return multipliers;
     }
 }
