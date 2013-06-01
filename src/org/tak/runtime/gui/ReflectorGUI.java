@@ -36,7 +36,7 @@ public class ReflectorGUI extends JFrame {
         this.multipliers = multipliers;
         setTitle("Runtime Reflection Analyzer");
         setSize(500, 500);
-        DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(name);
+        final DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(name);
         try {
             exploreObject(treeNode, getClient(), 0);
         } catch (IllegalAccessException e) {
@@ -55,8 +55,7 @@ public class ReflectorGUI extends JFrame {
                     } catch (Exception ignored) {}
                 }
                 while (isVisible()) {
-                    System.out.println("updating");
-                    DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(name);
+                    treeNode.removeAllChildren();
                     try {
                         exploreObject(treeNode,getClient(),0);
                     } catch (IllegalAccessException e) {
@@ -88,9 +87,6 @@ public class ReflectorGUI extends JFrame {
             if (!field.isAccessible())
                 field.setAccessible(true);
             Object result = field.get(object);
-            if (result instanceof String) {
-                System.out.println(result);
-            }
             if (result instanceof Integer && hasMultipliers) {
 
                 result = (Integer)result*multipliers.getMultiplier(klass.getName(), field.getName());
