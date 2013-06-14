@@ -13,7 +13,7 @@ import java.util.Scanner;
  */
 public class OSS implements Server {
     private static final String                  PAGE_ADDRESS = "http://oldschool69.runescape.com/";
-    private static final int                     REVISION     = 15;
+    private static final int                     REVISION     = 16;
     private final        HashMap<String, String> parameters   = new HashMap<>();
     private URL pageAddressUrl;
     public OSS() {

@@ -1,4 +1,4 @@
-package org.tak.util;
+package org.tak.util.asm;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;

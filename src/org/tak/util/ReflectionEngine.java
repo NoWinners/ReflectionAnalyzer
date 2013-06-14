@@ -13,6 +13,9 @@ public class ReflectionEngine {
     public ReflectionEngine(ClassLoader classLoader) {
         this.classLoader = classLoader;
     }
+    public ReflectionEngine() {
+        this.classLoader = ClassLoader.getSystemClassLoader();
+    }
     public Class getClass(String className) {
         try {
             return classLoader.loadClass(className);
@@ -35,6 +38,7 @@ public class ReflectionEngine {
     public Method getMethod(String className, String methodName, Class<?>... parameters) {
         return getMethod(getClass(className),methodName,parameters);
     }
+    @SuppressWarnings("unchecked")
     public Method getMethod(Class klass, String methodName, Class... parameters) {
         try {
             return klass.getDeclaredMethod(methodName,parameters);

@@ -1,4 +1,4 @@
-package org.tak.util;
+package org.tak.util.asm;
 
 import org.objectweb.asm.tree.*;
 import org.tak.runtime.Multipliers;
@@ -24,7 +24,7 @@ public class MultiplierFinder {
         this.fieldStores = fieldStores;
     }
 
-    public Multipliers getMultipliers(ClassNode[] classNodes) {
+    public Multipliers getMultipliers(List<ClassNode> classNodes) {
         final HashMap<FieldStore, Integer> multipliers = new HashMap<>();
         final HashMap<FieldStore, HashMap<Integer, Integer>> hashMap = new HashMap<>();
         for (ClassNode classNode : classNodes) {

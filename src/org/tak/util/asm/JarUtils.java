@@ -1,23 +1,23 @@
-package org.tak.util;
+package org.tak.util.asm;
 
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
 
 /**
  * User: Tommy
  * 5/28/13
  */
 public class JarUtils {
-    public static ClassNode[] getClassNodes(String jarPath) {
+    public static List<ClassNode> getClassNodes(String jarPath) {
         try {
             return getClassNodes(new JarFile(jarPath));
         } catch (IOException e) {
@@ -26,7 +26,7 @@ public class JarUtils {
         }
 
     }
-    public static ClassNode[] getClassNodes(JarFile jarFile) throws IOException {
+    public static List<ClassNode> getClassNodes(JarFile jarFile) throws IOException {
         Enumeration<JarEntry> jarEntries = jarFile.entries();
         List<ClassNode> classNodes = new ArrayList<>();
         while (jarEntries.hasMoreElements()) {
@@ -45,6 +45,24 @@ public class JarUtils {
                 classNodes.add(node);
             }
         }
-        return classNodes.toArray(new ClassNode[classNodes.size()]);
+        return classNodes;
     }
+    public static void dumpClasses(String jarName, List<ClassNode> classes) {
+        System.out.println("Dumping ClassNodes to "+jarName.substring(jarName.lastIndexOf("/")+1));
+        try {
+            File file = new File(jarName);
+            JarOutputStream out = new JarOutputStream(new FileOutputStream(file));
+            for(ClassNode node : classes) {
+                JarEntry entry = new JarEntry(node.name + ".class");
+                out.putNextEntry(entry);
+                ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+                node.accept(writer);
+                out.write(writer.toByteArray());
+            }
+            out.close();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

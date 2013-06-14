@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
  * 5/28/13
  */
 public class ReflectorGUI extends JFrame {
-    private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
+    private final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
     private final Object      client;
     private final boolean     hasMultipliers;
     private final Multipliers multipliers;
@@ -65,8 +65,6 @@ public class ReflectorGUI extends JFrame {
                     }
                     DefaultTreeModel treeModel = new DefaultTreeModel(treeNode);
                     tree.setModel(treeModel);
-                    tree.updateUI();
-                    jScrollPane.updateUI();
                     try {
                         Thread.sleep(5000);
                     } catch (Exception ignored) {

@@ -1,6 +1,6 @@
 package org.tak.runtime;
 
-import org.tak.util.FieldStore;
+import org.tak.util.asm.FieldStore;
 
 import java.io.OutputStream;
 import java.io.PrintStream;

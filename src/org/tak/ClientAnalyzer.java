@@ -2,7 +2,7 @@ package org.tak;
 
 import org.tak.runtime.Game;
 import org.tak.runtime.gui.ReflectorGUI;
-import org.tak.runtime.servers.BattleScape;
+import org.tak.runtime.servers.OSS;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +14,7 @@ import java.awt.*;
 public class ClientAnalyzer {
 
     public static void main(String[] args) {
-        Game game = new Game(new BattleScape());
+        Game game = new Game(new OSS());
         game.init();
         JFrame jFrame = new JFrame();
         jFrame.setLayout(new GridLayout());
