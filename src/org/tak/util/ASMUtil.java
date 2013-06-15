@@ -1,4 +1,4 @@
-package org.tak.util.asm;
+package org.tak.util;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodInsnNode;

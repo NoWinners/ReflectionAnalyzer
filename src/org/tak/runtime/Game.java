@@ -3,11 +3,11 @@ package org.tak.runtime;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.tak.runtime.servers.Server;
-import org.tak.util.asm.FieldStore;
+import org.tak.asm.FieldStore;
 import org.tak.util.JarClassLoader;
-import org.tak.util.asm.JarUtils;
-import org.tak.util.asm.MultiplierFinder;
-import org.tak.util.asm.deob.flow.ControlFlowGraph;
+import org.tak.util.JarUtils;
+import org.tak.asm.MultiplierFinder;
+import org.tak.asm.deob.flow.FlowGraph;
 
 import java.applet.Applet;
 import java.util.ArrayList;
@@ -32,8 +32,8 @@ public class Game {
         if (server.hasMultipliers()) {
             List<FieldStore> fieldStores = new ArrayList<>();
             List<ClassNode> classNodes = JarUtils.getClassNodes(server.getFilePath());
-            ControlFlowGraph controlFlowGraph = new ControlFlowGraph();
-            controlFlowGraph.run(classNodes);
+            FlowGraph flowGraph = new FlowGraph();
+            flowGraph.run(classNodes);
             for (ClassNode classNode : classNodes) {
                 if (classNode.name.length() < 5) {
                     for (FieldNode fieldNode : classNode.fields) {

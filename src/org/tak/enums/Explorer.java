@@ -1,6 +1,5 @@
-package org.tak;
+package org.tak.enums;
 
-import org.tak.enums.EnumExplorer;
 import org.tak.util.JarClassLoader;
 
 import java.io.IOException;
@@ -9,6 +8,10 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * User: Tommy
  * 5/27/13
+ */
+
+/**
+ * A utility that explores enums and outputs the data found.
  */
 public class Explorer {
     private       boolean  rsbotDependency;
@@ -21,21 +24,21 @@ public class Explorer {
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InvocationTargetException {
-        args = new String[]{"/Users/Tommy/keyloggers/uFighter-ob.jar","true", "false"};
+        args = new String[]{"/Users/Tommy/keyloggers/uFighter-ob.jar","true", "false", "y"};
         if (args.length < 3) {
-            System.out.println("Needs at least three args: file, rsbotDependency, DEBUG, otherDependencies (optional)");
+            System.out.println("Needs at least three args: file, rsbotDependency, DEBUG, enumClassName, otherDependencies (optional)");
             System.exit(0);
         }
         Explorer explorer = new Explorer(args[0]);
         explorer.setRsbotDependency(Boolean.parseBoolean(args[1]));
         DEBUG = Boolean.parseBoolean(args[2]);
-        String[] otherDependencies = new String[args.length-3];
-        for (int i = 3; i < args.length; i++) {
-            otherDependencies[i-3] = args[i];
+        String[] otherDependencies = new String[args.length-4];
+        for (int i = 4; i < args.length; i++) {
+            otherDependencies[i-4] = args[i];
         }
         explorer.setOtherDependencies(otherDependencies);
         explorer.init();
-        explorer.exploreEnum("v").byMethod();
+        explorer.exploreEnum(args[3]).byMethod();
     }
     public void init() throws IOException, ClassNotFoundException {
         loadDependencies();

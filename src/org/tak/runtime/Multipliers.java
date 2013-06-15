@@ -1,6 +1,7 @@
 package org.tak.runtime;
 
-import org.tak.util.asm.FieldStore;
+
+import org.tak.asm.FieldStore;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -17,6 +18,7 @@ public class Multipliers {
     public Multipliers(HashMap<FieldStore, Integer> multipliers) {
         this.multipliers = multipliers;
     }
+
     public void dumpMultipliers(OutputStream outputStream) {
         dumpMultipliers(new PrintStream(outputStream));
     }

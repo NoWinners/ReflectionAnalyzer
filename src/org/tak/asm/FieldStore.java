@@ -1,4 +1,4 @@
-package org.tak.util.asm;
+package org.tak.asm;
 
 import org.objectweb.asm.tree.FieldNode;
 

@@ -1,4 +1,4 @@
-package org.tak.util.asm.deob;
+package org.tak.asm.deob;
 
 import org.objectweb.asm.tree.ClassNode;
 

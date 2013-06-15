@@ -1,4 +1,4 @@
-package org.tak.util.asm.deob.flow;
+package org.tak.asm.deob.flow;
 
 import org.objectweb.asm.tree.MethodNode;
 

@@ -6,11 +6,13 @@ import org.tak.runtime.Multipliers;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -45,36 +47,24 @@ public class ReflectorGUI extends JFrame {
         }
         tree = new JTree(treeNode);
         final JScrollPane jScrollPane = new JScrollPane(tree);
-        add(jScrollPane);
-
-        EXECUTOR_SERVICE.submit(new Callable<Boolean>() {
+        setLayout(new BorderLayout());
+        add(jScrollPane,BorderLayout.CENTER);
+        final JButton jButton = new JButton("Refresh");
+        jButton.addActionListener(new ActionListener() {
             @Override
-            public Boolean call() throws Exception {
-                while (!isVisible()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (Exception ignored) {}
+            public void actionPerformed(ActionEvent actionEvent) {
+                treeNode.removeAllChildren();
+                try {
+                    exploreObject(treeNode,getClient(),0);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
                 }
-                while (isVisible()) {
-                    treeNode.removeAllChildren();
-                    try {
-                        exploreObject(treeNode,getClient(),0);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                        return false;
-                    }
-                    DefaultTreeModel treeModel = new DefaultTreeModel(treeNode);
-                    tree.setModel(treeModel);
-                    try {
-                        Thread.sleep(5000);
-                    } catch (Exception ignored) {
-                    }
+                DefaultTreeModel treeModel = new DefaultTreeModel(treeNode);
+                tree.setModel(treeModel);
 
-                }
-                return true;
             }
         });
-
+        add(jButton, BorderLayout.NORTH);
     }
     public Object getClient() {
         return client;

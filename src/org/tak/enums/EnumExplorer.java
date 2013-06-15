@@ -1,7 +1,5 @@
 package org.tak.enums;
 
-import org.tak.Explorer;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -32,7 +30,7 @@ public class EnumExplorer {
         }
         for (Field field : klass.getDeclaredFields()) {
             if (field.getType().equals(klass) && Modifier.isStatic(field.getModifiers())) {
-                System.out.println(field.getName());
+                System.out.println("##"+field.getName());
                 Object instance = field.get(null);
                 for (Method method : methods) {
                     method.setAccessible(true);

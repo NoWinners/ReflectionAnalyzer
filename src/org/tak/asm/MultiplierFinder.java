@@ -1,7 +1,8 @@
-package org.tak.util.asm;
+package org.tak.asm;
 
 import org.objectweb.asm.tree.*;
 import org.tak.runtime.Multipliers;
+import org.tak.util.RIS;
 
 import java.util.HashMap;
 import java.util.List;

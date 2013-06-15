@@ -1,4 +1,4 @@
-package org.tak;
+package org.tak.runtime.servers;
 
 import org.tak.runtime.Game;
 import org.tak.runtime.gui.ReflectorGUI;

@@ -1,9 +1,9 @@
-package org.tak.util.asm.deob.flow;
+package org.tak.asm.deob.flow;
 
 import org.objectweb.asm.tree.*;
-import org.tak.util.asm.ASMUtil;
-import org.tak.util.asm.JarUtils;
-import org.tak.util.asm.deob.Deobfuscator;
+import org.tak.util.ASMUtil;
+import org.tak.util.JarUtils;
+import org.tak.asm.deob.Deobfuscator;
 
 import java.util.*;
 
@@ -11,19 +11,19 @@ import java.util.*;
  * User: Tommy
  * 6/13/13
  */
-public class ControlFlowGraph implements Deobfuscator {
+public class FlowGraph implements Deobfuscator {
     private final Set<MethodStore> visited = new HashSet<>();
 
-    public ControlFlowGraph() {
+    public FlowGraph() {
 
     }
 
     public static void main(String[] args) {
-        ControlFlowGraph controlFlowGraph = new ControlFlowGraph();
+        FlowGraph flowGraph = new FlowGraph();
         List<ClassNode> classNodes = JarUtils.getClassNodes("/Users/Tommy/RSClients/r763.jar");
         long start = System.currentTimeMillis();
-        controlFlowGraph.init(classNodes);
-        controlFlowGraph.remove(classNodes);
+        flowGraph.init(classNodes);
+        flowGraph.remove(classNodes);
         System.out.println("time taken: "+(System.currentTimeMillis()-start));
         JarUtils.dumpClasses("/Users/Tommy/out.jar",classNodes);
     }
